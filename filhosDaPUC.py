@@ -4,11 +4,11 @@ Curso: Tecnologia em Análise e Desenvenvolvimento de Sistemas - EAD Modular
 '''
 # módulos
 import json
-
+#-------------------------------------
 # variáveis
 # estudante = {}
 estudante_base = []  #lista para guardar os estudantes cadastrados - vazia
-
+#-------------------------------------
 def sistema_puc():
     while True:  # menu principal junto a este while
         menu_principal()  #imprime menu principal
@@ -18,26 +18,30 @@ def sistema_puc():
                 input("Digite 1, 2, 3, 4, 5 ou 9, conforme opção desejada: "))  # opcao_mp é "opção do menu principal"
             # tratando as opções do usuário
             if opcao_mp == 1:
-                print("\n", "Você escolheu ACESSAR A ÁREA DE ESTUDANTES \n")
+                #print("\n", "Você escolheu ACESSAR A ÁREA DE ESTUDANTES \n")
                 while True:  # submenu operações com estudantes
-                    menu_estudante() #imprime menu estudante
+                    print(" \n" * 80)
+                    print("\n", "*" * 60, "\n")
+                    print("    #FILHOS DA PUC -- MENU ESTUDANTES")
+                    print("\n", "*" * 60, "\n")
+                    menu_de_operacoes() #imprime menu estudante
                     # tratando as opções do menu do estudante, controlar escolha do user.
                     try:
                         opcao = int(input("Digite 1, 2, 3, 4 ou 9, conforme opção desejada: "))
                         if opcao == 1: #Incluir estudantes
                             print("\n", "Você escolheu a CRIAR um registro de Estudante\n")
-                            criar_registro_estudante("estudante")  # chama função para criar o registro do estudante.
+                            criar_registro("estudantes")  # chama função para criar o registro do estudante.
                         elif opcao == 2: #Listar estudantes
                             print("\n", "Você escolheu a LISTAR Estudantes\n")
-                            listar_registro_estudante("estudante")  # chama a função de listagem dos estudantes.
+                            listar_registro_estudante("estudantes")  # chama a função de listagem dos estudantes.
                         elif opcao == 3: #editar estudantes
                             print()
                             print("Você escolheu a ALTERAR um registro de Estudante\n")
-                            editar_registro("estudante") # chama a função de edição dos estudantes
+                            editar_registro("estudantes") # chama a função de edição dos estudantes
                             input("\n\nPressione ENTER para continuar")
                         elif opcao == 4: #excluir estudantes
                             print("\nVocê escolheu a EXCLUIR um registro de Estudante\n")
-                            excluir_estudante()  # chama a função de exclusão dos estudantes
+                            excluir_estudante("estudantes")  # chama a função de exclusão dos estudantes
                             input("\n\nPressione ENTER para continuar")
                         elif opcao == 9:
                             print("\nVocê escolheu a VOLTAR AO MENU PRINCIPAL")
@@ -53,6 +57,7 @@ def sistema_puc():
                 print("\n", "*" * 60, "\n")
                 print("    #FILHOS DA PUC -- AREA DISCIPLINAS")
                 print("\n", "*" * 60, "\n")
+                menu_de_operacoes()
                 print("\nEM DESENVOLVIMENTO...")
                 input("\n\nPressione ENTER para continuar")
                 pass
@@ -60,6 +65,7 @@ def sistema_puc():
                 print("\n", "*" * 60, "\n")
                 print("    #FILHOS DA PUC -- AREA PROFESSOR")
                 print("\n", "*" * 60, "\n")
+                menu_de_operacoes()
                 print("\nEM DESENVOLVIMENTO...")
                 # gravar_estudante(estudante_base)
                 input("\n\nPressione ENTER para continuar")
@@ -68,11 +74,15 @@ def sistema_puc():
                 print("\n", "*" * 60, "\n")
                 print("    #FILHOS DA PUC -- AREA TURMAS")
                 print("\n", "*" * 60, "\n")
+                menu_de_operacoes()
                 print("\nEM DESENVOLVIMENTO...")
                 input("\n\nPressione ENTER para continuar")
                 pass
             elif opcao_mp == 5:
-                print("\n\nAréa de MATRÍCULAS")
+                print("\n", "*" * 60, "\n")
+                print("    #FILHOS DA PUC -- AREA de MATRÍCULAS")
+                print("\n", "*" * 60, "\n")
+                menu_de_operacoes()
                 print("EM DESENVOLVIMENTO...")
                 input("Pressione ENTER para continuar")
                 pass
@@ -103,24 +113,20 @@ def menu_principal():
             5. Área de matrícula
             9. Sair do Sistema\n''')
 
-def menu_estudante():
+def menu_de_operacoes():
     """
     Imprime o menu principal na tela para o usuário fazer sua escolha:\n
     sem parâmetros e sem retorno.
     """
-    print(" \n" * 80)
-    print("\n", "*" * 60, "\n")
-    print("    #FILHOS DA PUC -- MENU ESTUDANTES")
-    print("\n", "*" * 60, "\n")
-    print("1 - Registrar estudante")
-    print("2 - Listar estudante")
-    print("3 - Alterar estudante")
-    print("4 - Excluir estudante")
+    print("1 - Fazer Um Novo Registro")
+    print("2 - Consultar Registros")
+    print("3 - Alterar um Registro")
+    print("4 - Excluir um Registro")
     print("9 - Voltar ao Menu Principal")
     print("\n", "*" * 30, "\n")
 
-def criar_registro_estudante(tipo=None):
-    estudante_base = ler_arquivo(tipo)
+def criar_registro(modulo=None):
+    estudante_base = ler_arquivo(modulo+'.json')
     """
     Solicita e salva registros informados pelo usuários.
 
@@ -139,27 +145,30 @@ def criar_registro_estudante(tipo=None):
     #with open("filhosdapuc_estudantes.json", "r") as f:
     #    estudante_base = json.load(f)
     estudante_base.append(estudante)
-    gravar = gravar_registro(estudante_base)
+    gravar = gravar_registro(estudante_base, modulo)
     if gravar == True:
         print("Estudante Cadastrado! ")
 
 
-def ler_arquivo(tipo=None):
+def ler_arquivo(modulo=None):
     """
     Lê o arquivo solicitado e guardo numa variável de retorno
 
     :Tipo de entidade relativa aos dados do sistema: estudantes, professor, alunos
     :return: Retorna uma lista de discionários com os dados lidos.
        """
-    if tipo == "estudante":
+    if modulo == "estudante":
         try:
-            with open("filhosdapuc_estudantes.json", "r") as f:
+            with open(modulo+".json", "r") as f:
                 estudante_base = json.load(f)
         except IOError:
+            with open(modulo+".json", "w") as f:
+
             return False
+
     return estudante_base
 
-def listar_registro_estudante(tipo=None):
+def listar_registro_estudante(modulo=None):
     """
     Lista na tela dados solicitados a partir da leitura de arquivos da base do sistema
 
@@ -167,7 +176,7 @@ def listar_registro_estudante(tipo=None):
     :return: Retorna uma lista de discionários com os dados lidos.
     """
     # ler estudantes na base json
-    estudante_base = ler_arquivo(tipo)
+    estudante_base = ler_arquivo(modulo)
     if estudante_base == []:
         print()
         print("    Não há estudantes cadastrados!")
@@ -185,7 +194,7 @@ def listar_registro_estudante(tipo=None):
     input("\n\nPressione ENTER para continuar")
 
 
-def listar_estudante_especifico(estudante_base):
+def listar_estudante_especifico(estudante_base):#REFAZER
     estudante_a_listar = int(input("Informe o nome ou código do estudante: "))
     for estudante in estudante_base:
         for chave, valor in estudante.items():
@@ -194,7 +203,7 @@ def listar_estudante_especifico(estudante_base):
                 return (estudante)
 
 
-def editar_registro(tipo=None):
+def editar_registro(modulo=None):
     estudante_base = ler_arquivo(tipo)
     estudante_listado = listar_estudante_especifico(estudante_base)
     student_key = estudante_listado["código"]
@@ -206,17 +215,17 @@ def editar_registro(tipo=None):
     index_estudante = estudante_base.index(estudante_listado)
     estudante_base[index_estudante] = estudante_new
     # estudante_base.append(estudante_new)
-    gravar_registro(estudante_base)
+    gravar_registro(estudante_base, modulo)
 
 
-def excluir_estudante():
+def excluir_estudante(modulo=None):
     estudante_base = ler_arquivo()
     estudante_listado = listar_estudante_especifico(estudante_base)
     estudante_base.remove(estudante_listado)
     gravar_registro(estudante_base)
 
 
-def gravar_registro(registro):
+def gravar_registro(registro, modulo):
 
     with open("filhosdapuc_estudantes.json", "w+") as f:
         json.dump(registro, f)
